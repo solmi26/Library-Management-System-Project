@@ -1,0 +1,142 @@
+-- 관리자 스크립트 
+-- 계정생성
+CREATE user library IDENTIFIED by 1234;
+
+GRANT connect, resource, dba to library;
+
+GRANT unlimited tablespace to Library;
+
+-- 도서관 스크립트
+-- Members 테이블: 회원 정보를 저장
+-- Books 테이블: 도서 정보를 저장
+-- Borrow 테이블: 대출/반납 정보를 저장
+
+-- 회원 관리 테이블
+CREATE TABLE members (
+    id VARCHAR(10) PRIMARY KEY,
+    pwd VARCHAR(15) NOT NULL,
+    name VARCHAR(50) NOT NULL
+);
+
+ALTER TABLE members ADD (role NUMBER(1) DEFAULT 1);
+
+--  도서 관리 테이블
+CREATE TABLE books (
+    bno NUMBER PRIMARY KEY,   
+    title VARCHAR(50) NOT NULL,               
+    writer VARCHAR(255) NOT NULL,              
+    publisher VARCHAR(255) default '-',                    
+    isbn VARCHAR(20) default '-',                 
+    price NUMBER,                      
+    stock NUMBER NOT NULL,                 
+    borrowedStock NUMBER default 0         
+);
+
+CREATE SEQUENCE seq_bno NOCACHE;
+
+-- 대출 관리 테이블
+CREATE TABLE borrow (
+    bid NUMBER PRIMARY KEY,                
+    member_id VARCHAR(10) NOT NULL,       -- 회원 ID (외래 키)
+    borrow_date DATE DEFAULT SYSDATE,     -- 대출 일자
+    return_date DATE,                     -- 반납 일자
+    CONSTRAINT fk_member_id FOREIGN KEY (member_id) REFERENCES members(id)
+);
+
+CREATE SEQUENCE seq_bid NOCACHE;
+
+ALTER TABLE borrow
+ADD (book_title VARCHAR(50));
+
+-- 책 1
+INSERT INTO books (bno, title, writer, publisher, isbn, price, stock) 
+VALUES (seq_bno.NEXTVAL, '해리포터와 마법사의 돌', 'J.K. Rowling', '문학세계', '9780747532743', 15000, 20);
+
+-- 책 2
+INSERT INTO books (bno, title, writer, publisher, isbn, price, stock) 
+VALUES (seq_bno.NEXTVAL, 'The Great Gatsby', 'F. Scott Fitzgerald', 'Scribner', '9780743273565', 18000, 15);
+
+-- 책 3
+INSERT INTO books (bno, title, writer, publisher, isbn, price, stock) 
+VALUES (seq_bno.NEXTVAL, '노르웨이의 숲', 'Haruki Murakami', 'Vintage', '9780375704024', 20000, 10);
+
+-- 책 4
+INSERT INTO books (bno, title, writer, publisher, isbn, price, stock) 
+VALUES (seq_bno.NEXTVAL, '1984', 'George Orwell', 'Secker & Warburg', '9780451524935', 17000, 12);
+
+-- 책 5
+INSERT INTO books (bno, title, writer, publisher, isbn, price, stock) 
+VALUES (seq_bno.NEXTVAL, '자바의 정석', '남궁성', '도우출판', '9788979140765', 25000, 25);
+
+-- 책 6
+INSERT INTO books (bno, title, writer, publisher, isbn, price, stock) 
+VALUES (seq_bno.NEXTVAL, 'Pride and Prejudice', 'Jane Austen', 'T. Egerton', '9781503290563', 16000, 18);
+
+-- 책 7
+INSERT INTO books (bno, title, writer, publisher, isbn, price, stock) 
+VALUES (seq_bno.NEXTVAL, 'The Catcher in the Rye', 'J.D. Salinger', 'Little, Brown and Company', '9780316769488', 19000, 20);
+
+-- 책 8
+INSERT INTO books (bno, title, writer, publisher, isbn, price, stock) 
+VALUES (seq_bno.NEXTVAL, '죽은 자의 집 청소', '가제트', '지식과감성', '9788901203102', 22000, 14);
+
+-- 책 9
+INSERT INTO books (bno, title, writer, publisher, isbn, price, stock) 
+VALUES (seq_bno.NEXTVAL, 'Brave New World', 'Aldous Huxley', 'Chatto & Windus', '9780060850524', 18000, 17);
+
+-- 책 10
+INSERT INTO books (bno, title, writer, publisher, isbn, price, stock) 
+VALUES (seq_bno.NEXTVAL, '명량', '김한민', '역사문화', '9788901065683', 27000, 8);
+
+-- 책 11
+INSERT INTO books (bno, title, writer, publisher, isbn, price, stock) 
+VALUES (seq_bno.NEXTVAL, 'To Kill a Mockingbird', 'Harper Lee', 'J.B. Lippincott & Co.', '9780060935467', 19000, 22);
+
+-- 책 12
+INSERT INTO books (bno, title, writer, publisher, isbn, price, stock) 
+VALUES (seq_bno.NEXTVAL, '1984', 'George Orwell', 'Signet Classics', '9780451524935', 17000, 16);
+
+-- 책 13
+INSERT INTO books (bno, title, writer, publisher, isbn, price, stock) 
+VALUES (seq_bno.NEXTVAL, 'The Alchemist', 'Paulo Coelho', 'HarperOne', '9780062315007', 16000, 19);
+
+-- 책 14
+INSERT INTO books (bno, title, writer, publisher, isbn, price, stock) 
+VALUES (seq_bno.NEXTVAL, '시간을 파는 상점', '김선영', '서울문학', '9788952780121', 23000, 11);
+
+-- 책 15
+INSERT INTO books (bno, title, writer, publisher, isbn, price, stock) 
+VALUES (seq_bno.NEXTVAL, 'The Hitchhiker\'s Guide to the Galaxy', 'Douglas Adams', 'Pan Books', '9780330508537', 17000, 13);
+
+-- 책 16
+INSERT INTO books (bno, title, writer, publisher, isbn, price, stock) 
+VALUES (seq_bno.NEXTVAL, '추리소설의 기술', '미야베 미유키', '파란', '9788957830237', 25000, 9);
+
+-- 책 17
+INSERT INTO books (bno, title, writer, publisher, isbn, price, stock) 
+VALUES (seq_bno.NEXTVAL, 'Moby Dick', 'Herman Melville', 'Harper & Brothers', '9781851244422', 20000, 7);
+
+-- 책 18
+INSERT INTO books (bno, title, writer, publisher, isbn, price, stock) 
+VALUES (seq_bno.NEXTVAL, '호밀밭의 파수꾼', 'J.D. Salinger', 'Little, Brown and Company', '9780316769488', 18000, 21);
+
+-- 책 19
+INSERT INTO books (bno, title, writer, publisher, isbn, price, stock) 
+VALUES (seq_bno.NEXTVAL, '가시리', '박완서', '문학과지성사', '9788937484671', 21000, 12);
+
+-- 책 20
+INSERT INTO books (bno, title, writer, publisher, isbn, price, stock) 
+VALUES (seq_bno.NEXTVAL, 'The Road', 'Cormac McCarthy', 'Vintage', '9780307387899', 22000, 15);
+
+
+-- 일반 회원
+INSERT INTO members (id, pwd, name)
+            VALUES ('abc123', '1234', '이망고');
+            
+INSERT INTO members (id, pwd, name)
+            VALUES ('solmi26', '1234', '진솔미');
+
+-- 관리자
+INSERT INTO members (id, pwd, name, role)
+    VALUES ('admin', '1234', 'admin', 0);
+
